@@ -12,7 +12,7 @@ class ProductRepositoryImpl {
     );
 
     if (res.statusCode == 200) {
-      debugPrint(res.body);
+      // debugPrint(res.body);
       List<Product> products = List<Product>.from(jsonDecode(res.body).map((item) => Product.fromMap(item)));
       return products;
     } else {
@@ -61,17 +61,17 @@ class ProductRepositoryImpl {
     }
   }
 
-  // Future<Product> getProductById(int id) async {
-  //   final res = await http.get(
-  //       Uri.parse("https://product-catalog-backend.onrender.com/products/$id"),
-  //   );
-  //
-  //   // if (res.statusCode == 200) {
-  //   //   debugPrint(res.body);
-  //   //   List<Product> products = List<Product>.from(jsonDecode(res.body)["id"].map((item) => Product.fromMap(item)));
-  //   //   return products;
-  //   // } else {
-  //   //   throw Exception("Failed to load");
-  //   // }
-  // }
+  Future<Product> getProductById(String id) async {
+    final res = await http.get(
+        Uri.parse("https://product-catalog-backend.onrender.com/products/$id"),
+    );
+
+    if (res.statusCode == 200) {
+      // debugPrint(res.body);
+      Product product = Product.fromMap(jsonDecode(res.body));
+      return product;
+    } else {
+      throw Exception("Failed to load");
+    }
+  }
 }

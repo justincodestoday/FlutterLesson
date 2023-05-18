@@ -126,6 +126,7 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(10.0))),
               ),
             ),
+            // Password(onPassChanged: _onPasswordChanged(_password), passError: _passwordError),
             Container(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
               child: TextField(
@@ -203,6 +204,30 @@ class _LoginState extends State<Login> {
     );
   }
 }
+
+class Password extends StatelessWidget {
+  final Function onPassChanged;
+  final String passError;
+
+  const Password({Key? key, required this.onPassChanged, required this.passError}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
+      child: TextField(
+        onChanged: (value) => { onPassChanged(value)},
+        decoration: InputDecoration(
+            hintText: "Password",
+            errorText: passError.isEmpty ? null : passError,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0))),
+        obscureText: true,
+      ),
+    );
+  }
+}
+
 
 /*
   Row, Column, Text, TextField, ElevatedButton,

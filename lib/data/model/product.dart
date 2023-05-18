@@ -45,10 +45,10 @@ class Product {
       brand: map["brand"],
       category: map["category"],
       description: map["description"],
-      price: map["price"].toDouble(),
-      discountPercentage: map["discountPercentage"].toDouble(),
-      rating: map["rating"].toDouble(),
-      stock: map["stock"],
+      price: map["price"].toDouble() ?? 0,
+      discountPercentage: map["discountPercentage"].toDouble() ?? 0,
+      rating: map["rating"].toDouble() ?? 0,
+      stock: map["stock"] ?? 0,
       thumbnail: map["thumbnail"]
     );
   }

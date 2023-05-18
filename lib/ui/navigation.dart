@@ -5,8 +5,10 @@ import 'package:hello_flutter/ui/pizza.dart';
 import 'package:hello_flutter/ui/product_form.dart';
 import 'package:hello_flutter/ui/register.dart';
 import 'package:hello_flutter/ui/task_form.dart';
+import 'package:hello_flutter/ui/update_form.dart';
 import 'package:path/path.dart';
 
+import 'counter.dart';
 import 'home_tabs/home.dart';
 import 'lake.dart';
 import 'login.dart';
@@ -37,6 +39,9 @@ class NavigationRoutes extends StatelessWidget {
         path: "/lake",
         builder: (context, state) => const Lake()),
     GoRoute(
+        path: "/counter",
+        builder: (context, state) => const Counter()),
+    GoRoute(
         path: "/persons",
         builder: (context, state) => const Persons()),
     GoRoute(
@@ -47,7 +52,13 @@ class NavigationRoutes extends StatelessWidget {
         builder: (context, state) => const TaskForm()),
     GoRoute(
         path: "/products/form",
-        builder: (context, state) => const ProductForm())
+        builder: (context, state) => const ProductForm()),
+    GoRoute(
+        path: "/products/form/update/:id",
+        name: "update",
+        builder: (context, state) =>
+            UpdateForm(productId: state.pathParameters['id'] ?? "")
+    ),
   ];
 
   // final _router = GoRouter(routes: [

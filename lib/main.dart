@@ -2,9 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/data/database/db.dart';
 import 'package:hello_flutter/firebase_options.dart';
+import 'package:hello_flutter/provider/counter_provider.dart';
+import 'package:hello_flutter/provider/product_provider.dart';
 import 'package:hello_flutter/service/auth_service.dart';
 import 'package:hello_flutter/ui/navigation.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +21,15 @@ Future<void> main() async {
 
   final isLoggedIn = await AuthService.isLoggedIn();
   debugPrint(isLoggedIn.toString());
-  runApp(NavigationRoutes(initialRoute: isLoggedIn ? "/home" : "/login"));
+  runApp(
+      MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => CounterProvider()),
+            ChangeNotifierProvider(create: (context) => ProductProvider())
+          ],
+          child: NavigationRoutes(initialRoute: isLoggedIn ? "/home" : "/login")
+      )
+  );
 }
 
 // class MyApp extends StatelessWidget {

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hello_flutter/data/repository/product_repository_impl.dart';
 import 'package:hello_flutter/ui/product_form.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/model/product.dart';
+import '../../provider/product_provider.dart';
 
 class SecondTab extends StatefulWidget {
   const SecondTab({Key? key}) : super(key: key);
@@ -16,11 +18,11 @@ class _SecondTabState extends State<SecondTab> {
   final repo = ProductRepositoryImpl();
   List<Product> products = [];
 
-  @override
-  void initState() {
-    super.initState();
-    getProducts();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getProducts();
+  // }
 
   Future<void> _refreshData() async {
     // Perform your data fetching or refreshing logic here
@@ -29,6 +31,7 @@ class _SecondTabState extends State<SecondTab> {
 
     setState(() {
       products = refreshedProducts;
+      debugPrint(products.toString());
     });
   }
 
@@ -42,13 +45,16 @@ class _SecondTabState extends State<SecondTab> {
   }
 
   void _toCreate() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ProductForm()),
-    );
+    // await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const ProductForm()),
+    // );
+
+    await context.push("/products/form");
 
     setState(() {
       getProducts();
+      Provider.of<ProductProvider>(context, listen: false).getProducts();
     });
   }
 
@@ -74,6 +80,15 @@ class _SecondTabState extends State<SecondTab> {
         }
       )
     );
+  }
+
+  void _toUpdate(String id) async {
+    await context.pushNamed("update", pathParameters: {'id': id});
+
+    setState(() {
+      getProducts();
+      Provider.of<ProductProvider>(context, listen: false).getProducts();
+    });
   }
 
   Future<bool> _onConfirmDismiss(DismissDirection dir, Product product) async {
@@ -105,7 +120,7 @@ class _SecondTabState extends State<SecondTab> {
           }
       );
     } else if (dir == DismissDirection.startToEnd) {
-      _updateProduct(product);
+      _toUpdate(product.id!);
       return false;
     } else {
       return false;
@@ -116,7 +131,10 @@ class _SecondTabState extends State<SecondTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: _refreshData,
+        // onRefresh: _refreshData,
+        onRefresh: () async {
+          Provider.of<ProductProvider>(context, listen: false).getProducts();
+        },
         child: Column(
           children: [
             Expanded(
@@ -125,76 +143,81 @@ class _SecondTabState extends State<SecondTab> {
                 // width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 alignment: Alignment.center,
-                child: ListView.builder(
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    debugPrint(products.length.toString());
-                    final product = products[index];
-                    final title = product.title;
-                    final description = product.description;
-                    final category = product.category;
-                    final price = product.price;
+                child: Consumer<ProductProvider>(
+                  builder: (context, productProvider, _) =>
+                ListView.builder(
+                    // itemCount: products.length,
+                    itemCount: productProvider.products.length,
+                    itemBuilder: (context, index) {
+                      debugPrint(products.length.toString());
+                      // final product = products[index];
+                      final product = productProvider.products[index];
+                      final title = product.title;
+                      final description = product.description;
+                      final category = product.category;
+                      final price = product.price;
 
-                    return Card(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Dismissible(
-                        key: Key(product.id.toString()),
-                        onDismissed: (dir) { _deleteProduct(product.id!); },
-                        background: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Container(margin: const EdgeInsets.only(left: 16) , alignment: Alignment.centerLeft,child: const Text("Update"),),
+                      return Card(
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
                         ),
-                        secondaryBackground: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.red.shade600,
-                              borderRadius: BorderRadius.circular(10)
+                        child: Dismissible(
+                          key: Key(product.id.toString()),
+                          onDismissed: (dir) { _deleteProduct(product.id!); },
+                          background: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Container(margin: const EdgeInsets.only(left: 16) , alignment: Alignment.centerLeft,child: const Text("Update"),),
                           ),
-                          child: Container(margin: const EdgeInsets.only(right: 16) , alignment: Alignment.centerRight,child: const Text("Delete"),),
+                          secondaryBackground: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.red.shade600,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Container(margin: const EdgeInsets.only(right: 16) , alignment: Alignment.centerRight,child: const Text("Delete"),),
+                          ),
+                          confirmDismiss: (dir) async {
+                            return _onConfirmDismiss(dir, product);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(title),
+                                        Text(description),
+                                        Text("Category: $category"),
+                                        Text("Price: $price")
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _toUpdate(product.id!);
+                                      },
+                                      child: const Icon(Icons.edit),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        confirmDismiss: (dir) async {
-                          return _onConfirmDismiss(dir, product);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(title),
-                                      Text(description),
-                                      Text("Category: $category"),
-                                      Text("Price: $price")
-                                    ],
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _updateProduct(product);
-                                    },
-                                    child: const Icon(Icons.edit),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

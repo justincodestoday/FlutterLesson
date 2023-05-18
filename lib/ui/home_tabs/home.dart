@@ -66,6 +66,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     context.push("/lake");
   }
 
+  void _navigateToCounter(BuildContext context) {
+    context.pop();
+    context.push("/counter");
+  }
+
   void _logout(BuildContext context) {
     AuthService.deauthenticate();
     context.pop();
@@ -179,6 +184,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ListTile(
                           onTap: () => { _navigateToScene(context) },
                           title: const Text("Lake",
+                              style: TextStyle(
+                                  color: Colors.indigo, fontSize: 18))),
+                      ListTile(
+                          onTap: () => { _navigateToCounter(context) },
+                          title: const Text("Counter",
                               style: TextStyle(
                                   color: Colors.indigo, fontSize: 18))),
                       ListTile(
