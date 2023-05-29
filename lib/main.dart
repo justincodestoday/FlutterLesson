@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/data/database/db.dart';
@@ -19,7 +20,8 @@ Future<void> main() async {
   final version = await db.getVersion();
   debugPrint('Database version: $version');
 
-  final isLoggedIn = await AuthService.isLoggedIn();
+  final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+  // final isLoggedIn = await AuthService.isLoggedIn();
   debugPrint(isLoggedIn.toString());
   runApp(
       MultiProvider(

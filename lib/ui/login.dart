@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hello_flutter/service/auth_service.dart';
 
 import '../data/model/user.dart';
+import '../data/repository/user_repository_impl.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -12,6 +13,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  UserRepositoryImpl userRepo = UserRepositoryImpl();
+
   var _email = "";
   var _emailError = "";
 
@@ -30,44 +33,75 @@ class _LoginState extends State<Login> {
     });
   }
 
-  _onLoginClick() {
-    setState(() {
-      if (_email.isEmpty) {
-        _emailError = "This field cannot be empty";
-        return;
-      } else {
-        _emailError = "";
-      }
+  _onLoginClick() async {
+    if (_email.isEmpty) {
+      _emailError = "This field cannot be empty";
+      return;
+    } else {
+      _emailError = "";
+    }
 
-      if (_password.isEmpty) {
-        _passwordError = "This field cannot be empty";
-        return;
-      } else {
-        _passwordError = "";
-      }
+    if (_password.isEmpty) {
+      _passwordError = "This field cannot be empty";
+      return;
+    } else {
+      _passwordError = "";
+    }
 
-      // if (_email == "abc@abc.com" && _password == "qweqweqwe" ||
-      //     _email == "abc@abc2.com" && _password == "qweqweqwe") {
-      //   // GoRouter.of(context).pushNamed("home", pathParameters: {"email": _email});
-      //   context.pushNamed("home", pathParameters: {'email': _email});
-      //   // context.go("/home");
-      //   AuthService.authenticate(
-      //       User(id: 0, name: _name, email: _email, password: _password));
-      // }
+    // AuthService.authenticate(
+    //     _email, _password, (status) => {
+    //       if (status) {
+    //         context.push("/home")
+    //         // context.pushNamed("home", pathParameters: {'email': _email})
+    //       } else {
+    //         debugPrint("Wrong Credentials")
+    //       }
+    //     }
+    // );
+    try {
+      await userRepo.login(_email, _password);
+      context.go("/home");
+    } catch (e) {
+      debugPrint('Email or Password Incorrect');
+    }
 
-      AuthService.authenticate(
-          _email, _password, (status) => {
-            if (status) {
-              context.push("/home")
-              // context.pushNamed("home", pathParameters: {'email': _email})
-            } else {
-              debugPrint("Wrong Credentials")
-            }
-          }
-      );
-
-      debugPrint("$_email $_password");
-    });
+    // setState(() {
+    //   if (_email.isEmpty) {
+    //     _emailError = "This field cannot be empty";
+    //     return;
+    //   } else {
+    //     _emailError = "";
+    //   }
+    //
+    //   if (_password.isEmpty) {
+    //     _passwordError = "This field cannot be empty";
+    //     return;
+    //   } else {
+    //     _passwordError = "";
+    //   }
+    //
+    //   // if (_email == "abc@abc.com" && _password == "qweqweqwe" ||
+    //   //     _email == "abc@abc2.com" && _password == "qweqweqwe") {
+    //   //   // GoRouter.of(context).pushNamed("home", pathParameters: {"email": _email});
+    //   //   context.pushNamed("home", pathParameters: {'email': _email});
+    //   //   // context.go("/home");
+    //   //   AuthService.authenticate(
+    //   //       User(id: 0, name: _name, email: _email, password: _password));
+    //   // }
+    //
+    //   AuthService.authenticate(
+    //       _email, _password, (status) => {
+    //         if (status) {
+    //           context.push("/home")
+    //           // context.pushNamed("home", pathParameters: {'email': _email})
+    //         } else {
+    //           debugPrint("Wrong Credentials")
+    //         }
+    //       }
+    //   );
+    //
+    //   debugPrint("$_email $_password");
+    // });
   }
 
   _toRegister() {

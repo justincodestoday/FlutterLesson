@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hello_flutter/data/repository/user_repository_impl.dart';
 import 'package:hello_flutter/service/auth_service.dart';
 
 import '../data/model/user.dart';
@@ -13,6 +14,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  UserRepositoryImpl userRepo = UserRepositoryImpl();
+
   var _name = "";
   var _nameError = "";
 
@@ -40,8 +43,8 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  _onRegisterClick() {
-    setState(() {
+  _onRegisterClick() async {
+    try {
       if (_name.isEmpty) {
         _nameError = "This field cannot be empty";
         return;
@@ -64,12 +67,44 @@ class _RegisterState extends State<Register> {
       }
 
       AuthService.createUser(
-        User(name: _name, email: _email, password: _password)
+          User(name: _name, email: _email, password: _password)
       );
-      context.pop();
+      await userRepo.register(User(name: _name, email: _email, password: _password));
+      setState(() {
+        context.pop();
+      });
+    } catch (e) {
+      throw Exception(e.toString());
+    }
 
-      debugPrint("$_name $_email $_password");
-    });
+    // setState(() {
+    //   if (_name.isEmpty) {
+    //     _nameError = "This field cannot be empty";
+    //     return;
+    //   } else {
+    //     _nameError = "";
+    //   }
+    //
+    //   if (_email.isEmpty) {
+    //     _emailError = "This field cannot be empty";
+    //     return;
+    //   } else {
+    //     _emailError = "";
+    //   }
+    //
+    //   if (_password.isEmpty) {
+    //     _passwordError = "This field cannot be empty";
+    //     return;
+    //   } else {
+    //     _passwordError = "";
+    //   }
+    //
+    //   AuthService.createUser(
+    //     User(name: _name, email: _email, password: _password)
+    //   );
+    //   context.pop();
+    //   debugPrint("$_name $_email $_password");
+    // });
   }
 
   _toLogin() {
