@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hello_flutter/data/model/task.dart';
 import 'package:hello_flutter/data/model/user.dart';
 import 'package:hello_flutter/data/repository/person_repository_impl.dart';
+import 'package:hello_flutter/provider/provider.dart';
 import 'package:hello_flutter/service/auth_service.dart';
 import 'package:hello_flutter/ui/task_form.dart';
 
@@ -132,6 +134,25 @@ class _FirstTabState extends State<FirstTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: [
+        Consumer(
+          builder: (_, WidgetRef ref, __) {
+            final myState = ref.watch(taskStateProvider);
+            return Column(
+              children: [
+                Text(
+                  myState.counter.toString(),
+                  style: const TextStyle(fontSize: 22),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      ref.read(taskStateProvider.notifier).increment();
+                    },
+                    child: const Text("Increment")
+                )
+              ]
+            );
+          },
+        ),
         Expanded(
             child: Container(
                 color: Colors.green,

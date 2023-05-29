@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hello_flutter/ui/canvas.dart';
 import 'package:hello_flutter/ui/persons.dart';
 import 'package:hello_flutter/ui/pizza.dart';
 import 'package:hello_flutter/ui/product_form.dart';
+import 'package:hello_flutter/ui/products.dart';
 import 'package:hello_flutter/ui/register.dart';
 import 'package:hello_flutter/ui/task_form.dart';
 import 'package:hello_flutter/ui/update_form.dart';
@@ -59,6 +61,14 @@ class NavigationRoutes extends StatelessWidget {
         builder: (context, state) =>
             UpdateForm(productId: state.pathParameters['id'] ?? "")
     ),
+    GoRoute(
+        path: "/canvas",
+        builder: (context, state) => const CustomCanvas()
+    ),
+    GoRoute(
+      path: "/products",
+      builder: (context, state) => const Products()
+    )
   ];
 
   // final _router = GoRouter(routes: [

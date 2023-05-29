@@ -13,6 +13,14 @@ class ProductRepositoryImpl {
 
     if (res.statusCode == 200) {
       // debugPrint(res.body);
+
+      // Another method to get the products to become a list
+      // var body = jsonDecode(res.body);
+      // final products = <Product>[];
+      // for(final item in body) {
+      //   products.add(Product.fromMap(item));
+      // }
+
       List<Product> products = List<Product>.from(jsonDecode(res.body).map((item) => Product.fromMap(item)));
       return products;
     } else {

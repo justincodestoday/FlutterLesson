@@ -18,11 +18,11 @@ class _SecondTabState extends State<SecondTab> {
   final repo = ProductRepositoryImpl();
   List<Product> products = [];
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getProducts();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getProducts();
+  }
 
   Future<void> _refreshData() async {
     // Perform your data fetching or refreshing logic here
@@ -54,7 +54,7 @@ class _SecondTabState extends State<SecondTab> {
 
     setState(() {
       getProducts();
-      Provider.of<ProductProvider>(context, listen: false).getProducts();
+      // Provider.of<ProductProvider>(context, listen: false).getProducts();
     });
   }
 
@@ -87,7 +87,7 @@ class _SecondTabState extends State<SecondTab> {
 
     setState(() {
       getProducts();
-      Provider.of<ProductProvider>(context, listen: false).getProducts();
+      // Provider.of<ProductProvider>(context, listen: false).getProducts();
     });
   }
 
@@ -131,10 +131,10 @@ class _SecondTabState extends State<SecondTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        // onRefresh: _refreshData,
-        onRefresh: () async {
-          Provider.of<ProductProvider>(context, listen: false).getProducts();
-        },
+        onRefresh: _refreshData,
+        // onRefresh: () async {
+        //   Provider.of<ProductProvider>(context, listen: false).getProducts();
+        // },
         child: Column(
           children: [
             Expanded(
@@ -143,15 +143,16 @@ class _SecondTabState extends State<SecondTab> {
                 // width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 alignment: Alignment.center,
-                child: Consumer<ProductProvider>(
-                  builder: (context, productProvider, _) =>
+                child:
+                // child: Consumer<ProductProvider>(
+                //   builder: (context, productProvider, _) =>
                 ListView.builder(
-                    // itemCount: products.length,
-                    itemCount: productProvider.products.length,
+                    itemCount: products.length,
+                    // itemCount: productProvider.products.length,
                     itemBuilder: (context, index) {
                       debugPrint(products.length.toString());
-                      // final product = products[index];
-                      final product = productProvider.products[index];
+                      final product = products[index];
+                      // final product = productProvider.products[index];
                       final title = product.title;
                       final description = product.description;
                       final category = product.category;
@@ -217,7 +218,6 @@ class _SecondTabState extends State<SecondTab> {
                         ),
                       );
                     },
-                  ),
                 ),
               ),
             ),

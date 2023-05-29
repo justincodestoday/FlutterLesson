@@ -64,6 +64,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   void _navigateToScene(BuildContext context) {
     context.push("/lake");
+    Navigator.of(context).pop();
   }
 
   void _navigateToCounter(BuildContext context) {
@@ -79,10 +80,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   void _navigateToAccount(BuildContext context) {
     context.push("/persons");
+    Navigator.of(context).pop();
   }
 
   void _toTab(BuildContext context) {
     _tabController.index = 2;
+    Navigator.of(context).pop();
+  }
+
+  void _navigateToCanvas(BuildContext context) {
+    context.push("/canvas");
+    Navigator.of(context).pop();
+  }
+  
+  void _navigateToProducts(BuildContext context) {
+    context.push("/products");
     Navigator.of(context).pop();
   }
 
@@ -186,16 +198,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           title: const Text("Lake",
                               style: TextStyle(
                                   color: Colors.indigo, fontSize: 18))),
-                      ListTile(
-                          onTap: () => { _navigateToCounter(context) },
-                          title: const Text("Counter",
-                              style: TextStyle(
-                                  color: Colors.indigo, fontSize: 18))),
+                      // ListTile(
+                      //     onTap: () => { _navigateToCounter(context) },
+                      //     title: const Text("Counter",
+                      //         style: TextStyle(
+                      //             color: Colors.indigo, fontSize: 18))),
                       ListTile(
                           onTap: () { _logout(context); },
                           title: const Text("Logout",
                               style: TextStyle(
-                                  color: Colors.indigo, fontSize: 18)))
+                                  color: Colors.indigo, fontSize: 18))),
+                      ListTile(
+                          onTap: () { _navigateToCanvas(context); },
+                          title: const Text("Canvas",
+                              style: TextStyle(
+                                  color: Colors.indigo, fontSize: 18))),
+                      ListTile(
+                          onTap: () { _navigateToProducts(context); },
+                          title: const Text("Products",
+                              style: TextStyle(
+                                  color: Colors.indigo, fontSize: 18))),
                     ]
                 )
             )

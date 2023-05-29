@@ -40,7 +40,8 @@ class Product {
 
   static fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map["_id"],
+      // id: map["_id"], // for the other database from Render
+      id: map["id"], // for the database from Firebase
       title: map["title"],
       brand: map["brand"],
       category: map["category"],

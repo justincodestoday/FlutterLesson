@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hello_flutter/data/database/db.dart';
 import 'package:hello_flutter/firebase_options.dart';
 import 'package:hello_flutter/provider/counter_provider.dart';
@@ -24,13 +25,17 @@ Future<void> main() async {
   // final isLoggedIn = await AuthService.isLoggedIn();
   debugPrint(isLoggedIn.toString());
   runApp(
-      MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => CounterProvider()),
-            ChangeNotifierProvider(create: (context) => ProductProvider())
-          ],
-          child: NavigationRoutes(initialRoute: isLoggedIn ? "/home" : "/login")
-      )
+      // MultiProvider(
+      //     providers: [
+      //       ChangeNotifierProvider(create: (context) => CounterProvider()),
+      //       ChangeNotifierProvider(create: (context) => ProductProvider())
+      //     ],
+      //     child: NavigationRoutes(initialRoute: isLoggedIn ? "/home" : "/login")
+      // )
+      ProviderScope(
+        child: NavigationRoutes(
+            initialRoute: isLoggedIn ? "/home" : "/login")
+      ),
   );
 }
 
