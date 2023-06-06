@@ -44,17 +44,9 @@ class ProductRepositoryImpl {
   }
 
   Future deleteItem(String id) async {
-    // final res = await http.delete(
-    //   Uri.parse("https://product-catalog-backend.onrender.com/products/$id"),
-    // );
     await http.delete(
       Uri.parse("https://product-catalog-backend.onrender.com/products/$id"),
     );
-    // if (res.statusCode == 200) {
-    //   // return jsonDecode(res.body)["id"];
-    // } else {
-    //   throw Exception("Failed to delete");
-    // }
   }
 
   Future updateItem(String id, Product product) async {
