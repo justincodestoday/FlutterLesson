@@ -68,7 +68,8 @@ class _SecondTabState extends State<SecondTab> {
   Future _deleteProduct(String id) async {
     await repo.deleteItem(id);
     setState(() {
-      getProducts();
+      // getProducts();
+      products.removeWhere((product) => product.id == id);
     });
   }
 
